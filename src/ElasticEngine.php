@@ -94,13 +94,13 @@ class ElasticEngine extends Engine
                 $payload = new TypePayload($builder->model);
 
                 if (is_callable($rule)) {
-                    $payload->setIfNotEmpty('body.query', call_user_func($rule, $builder));
+                    $payload->setIfNotEmpty('body.query.bool', call_user_func($rule, $builder));
                 } else {
                     /** @var SearchRule $ruleEntity */
                     $ruleEntity = new $rule($builder);
 
                     if ($ruleEntity->isApplicable()) {
-                        $payload->setIfNotEmpty('body.query.match', $ruleEntity->buildQueryPayload());
+                        $payload->setIfNotEmpty('body.query', $ruleEntity->buildQueryPayload());
 
                         if ($options['highlight'] ?? true) {
                             $payload->setIfNotEmpty('body.highlight', $ruleEntity->buildHighlightPayload());
